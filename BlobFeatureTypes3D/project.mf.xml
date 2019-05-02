@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<manifest>
+    <application name="BlobFeatureTypes3D">
+        <crown name="BlobFeatureTypes3D">
+            <desc>user script</desc>
+            <serves/>
+        </crown>
+        <meta key="author">AppSpace Sample</meta>
+        <meta key="version">2.5.0</meta>
+        <meta key="licensed">false</meta>
+        <meta key="priority">low</meta>
+        <meta key="copy-protected">false</meta>
+        <meta key="read-protected">false</meta>
+        <meta key="tags">InspectorP,SIM4000,Image,Algorithm,Filter,Analysis, 3D</meta>
+        <entry path="pages" default="BlobFeatureTypes3D.msdd">
+            <file type="application/zip">BlobFeatureTypes3D.msdd</file>
+        </entry>
+        <entry path="resources">
+            <file type="application">image.json</file>
+            <file type="image">TestObj_3.png</file>
+        </entry>
+        <entry path="scripts" default="Main.lua">
+            <file type="text/x-lua">BlobFeatureTypes3D.lua</file>
+            <file type="text/x-lua">Helpers.lua</file>
+            <file type="text/x-lua">Main.lua</file>
+        </entry>
+    </application>
+</manifest>
