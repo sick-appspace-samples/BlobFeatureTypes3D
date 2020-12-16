@@ -1,8 +1,8 @@
 local viewer3D = View.create()
-viewer3D:setID('viewer3D')
+viewer3D:setID('viewer3D1')
 
 local viewer2D = View.create()
-viewer2D:setID('viewer2D')
+viewer2D:setID('viewer2D1')
 
 -- Create decoration objects
 local imgDecoration = View.ImageDecoration.create()
