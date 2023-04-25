@@ -3,13 +3,16 @@ local helper = require('Helpers')
 --------------------------------------------------------
 -- Area
 --------------------------------------------------------
---@area(heightMap:Image, intensityMap:Image, plane:Shape, region:Image.PixelRegion) 
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
+---@param region Image.PixelRegion
 local function area(heightMap, intensityMap, plane, region)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap}, helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
   
   -- Finding blobs
   local objectRegion
@@ -27,9 +30,9 @@ local function area(heightMap, intensityMap, plane, region)
     local cog = blobs[i]:getCenterOfGravity(heightMap)
 
     -- Graphics
-    helper.viewer2D:addPixelRegion(blobs[i], helper.decRectangles, nil, iconicId2D)
+    helper.viewer2D:addPixelRegion(blobs[i], helper.decRectangles)
     helper.viewer3D:addPixelRegion(blobs[i], helper.decRectangles, nil, iconicId)
-    helper.featureText(cog:getX(),cog:getY(),heightMap:getMax(blobs[i]), "Area = "..helper.round(feature,2).." mm^2", iconicId, iconicId2D)
+    helper.featureText(cog:getX(),cog:getY(),heightMap:getMax(blobs[i]), "Area = "..helper.round(feature,2).." mm^2")
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -38,13 +41,15 @@ end
 --------------------------------------------------------
 -- Centroid
 --------------------------------------------------------
---@centroid(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function centroid(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
-  local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap}, helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer3D:addHeightmap({heightMap, intensityMap}, helper.imgDecoration, {"Reflectance"})
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
   
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(4, 50, plane)
@@ -56,12 +61,12 @@ local function centroid(heightMap, intensityMap, plane)
     local z = heightMap:getMax(blobs[i])
     
     -- Graphics
-    helper.viewer2D:addShape(feature, helper.pointDecoration2D, nil, iconicId2D)
+    helper.viewer2D:addShape(feature, helper.pointDecoration2D)
     feature = Point.create(feature:getX(), feature:getY(), z)
-    helper.viewer3D:addShape(feature, helper.pointDecoration3D, nil, iconicId)
+    helper.viewer3D:addShape(feature, helper.pointDecoration3D)
 
     local strg = "COG = ("..helper.round(feature:getX(),2) ..","..helper.round(feature:getY(),2)..")"
-    helper.featureText(feature:getX(), feature:getY()+2, z, strg, iconicId, iconicId2D)
+    helper.featureText(feature:getX(), feature:getY()+2, z, strg)
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -70,12 +75,14 @@ end
 --------------------------------------------------------
 -- Elongation
 --------------------------------------------------------
---@elongation(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function elongation(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
-  local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
   
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(4, 50, plane)
@@ -90,10 +97,10 @@ local function elongation(heightMap, intensityMap, plane)
     local z = heightMap:getMax(blobs[i])
  
     -- Graphics
-    helper.viewer2D:addShape(box, helper.lineDecoration2D, nil, iconicId2D)
+    helper.viewer2D:addShape(box, helper.lineDecoration2D)
     box = Shape.toShape3D(box, Transform.createTranslation3D(0,0,z))
-    helper.viewer3D:addShape(box, helper.lineDecoration3D, nil, iconicId)
-    helper.featureText(center:getX(), center:getY(), z,  "E = "..helper.round((feature*10)/10,2), iconicId, iconicId2D)
+    helper.viewer3D:addShape(box, helper.lineDecoration3D)
+    helper.featureText(center:getX(), center:getY(), z,  "E = "..helper.round((feature*10)/10,2))
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -102,13 +109,16 @@ end
 --------------------------------------------------------
 -- Convexity
 --------------------------------------------------------
---@convexity(heightMap:Image, intensityMap:Image, plane:Shape, region:Image.PixelRegion)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
+---@param region Image.PixelRegion
 local function convexity(heightMap, intensityMap, plane,region)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
   
   -- Finding blobs
   local objectRegion
@@ -129,8 +139,8 @@ local function convexity(heightMap, intensityMap, plane,region)
         
     -- Graphics
     helper.viewer3D:addPixelRegion(blobs[i],helper.regionDecoration, nil, iconicId)
-    helper.viewer2D:addPixelRegion(blobs[i],helper.regionDecoration, nil, iconicId2D)
-    helper.featureText(center:getX(), center:getY(), z, "C = "..helper.round((feature*10)/10,2), iconicId, iconicId2D)
+    helper.viewer2D:addPixelRegion(blobs[i],helper.regionDecoration)
+    helper.featureText(center:getX(), center:getY(), z, "C = "..helper.round((feature*10)/10,2))
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -139,12 +149,14 @@ end
 --------------------------------------------------------
 -- Compactness
 --------------------------------------------------------
---@compactness(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function compactness(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
   
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(1, 50, plane)
@@ -162,9 +174,9 @@ local function compactness(heightMap, intensityMap, plane)
      -- Graphics
     helper.viewer3D:addPixelRegion(blobs[i],helper.regionDecoration, nil, iconicId)
     helper.viewer3D:addPixelRegion(border,helper.borderDecoration, nil, iconicId)
-    helper.viewer2D:addPixelRegion(blobs[i],helper.regionDecoration, nil, iconicId2D)
-    helper.viewer2D:addPixelRegion(border,helper.borderDecoration, nil, iconicId2D)
-    helper.featureText(center:getX(), center:getY(), z, "C = "..math.floor(feature*100)/100, iconicId, iconicId2D)
+    helper.viewer2D:addPixelRegion(blobs[i],helper.regionDecoration)
+    helper.viewer2D:addPixelRegion(border,helper.borderDecoration)
+    helper.featureText(center:getX(), center:getY(), z, "C = "..math.floor(feature*100)/100)
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -173,13 +185,15 @@ end
 --------------------------------------------------------
 -- Perimeter length
 --------------------------------------------------------
---@perimeterLength(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function perimeterLength(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
   
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(1, 50, plane)
@@ -197,8 +211,8 @@ local function perimeterLength(heightMap, intensityMap, plane)
 
     -- Graphics
     helper.viewer3D:addPixelRegion(border,helper.borderDecoration, nil, iconicId)
-    helper.viewer2D:addPixelRegion(border,helper.borderDecoration, nil, iconicId2D)
-    helper.featureText(center:getX(), center:getY(),z, "P = "..helper.round(feature,2), iconicId, iconicId2D)
+    helper.viewer2D:addPixelRegion(border,helper.borderDecoration)
+    helper.featureText(center:getX(), center:getY(),z, "P = "..helper.round(feature,2))
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -207,13 +221,15 @@ end
 --------------------------------------------------------
 -- Convex hull
 --------------------------------------------------------
---@convexHull(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function convexHull(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
 
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(4, 50, plane)
@@ -225,7 +241,7 @@ local function convexHull(heightMap, intensityMap, plane)
     
     -- Graphics
     helper.viewer3D:addPixelRegion(feature,helper.regionDecoration, nil, iconicId)
-    helper.viewer2D:addPixelRegion(feature,helper.regionDecoration, nil, iconicId2D)
+    helper.viewer2D:addPixelRegion(feature,helper.regionDecoration)
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -234,13 +250,15 @@ end
 --------------------------------------------------------
 -- Counting holes
 --------------------------------------------------------
---@countHoles(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function countHoles(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
 
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(4.5, 50, plane)
@@ -256,8 +274,8 @@ local function countHoles(heightMap, intensityMap, plane)
     
     -- Graphics
     helper.viewer3D:addPixelRegion(objectHoles,helper.regionDecoration, nil, iconicId)
-    helper.viewer2D:addPixelRegion(objectHoles,helper.regionDecoration, nil, iconicId2D)
-    helper.featureText(center:getX(), center:getY(),z, "# = "..feature, iconicId, iconicId2D)
+    helper.viewer2D:addPixelRegion(objectHoles,helper.regionDecoration)
+    helper.featureText(center:getX(), center:getY(),z, "# = "..feature)
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
@@ -266,13 +284,15 @@ end
 --------------------------------------------------------
 -- Orientation (principal axes)
 --------------------------------------------------------
---@orientation(heightMap:Image, intensityMap:Image, plane:Shape)
+---@param heightMap Image
+---@param intensityMap Image
+---@param plane Shape
 local function orientation(heightMap, intensityMap, plane)
   helper.viewer3D:clear()
   helper.viewer2D:clear()
   
   local iconicId = helper.viewer3D:addHeightmap({heightMap, intensityMap},helper.imgDecoration, {"Reflectance"})
-  local iconicId2D = helper.viewer2D:addImage(heightMap, helper.imgDecoration)
+  helper.viewer2D:addImage(heightMap, helper.imgDecoration)
 
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(4.5, 50, plane)
@@ -291,7 +311,7 @@ local function orientation(heightMap, intensityMap, plane)
     local majorAxis = Shape3D.createLineSegment(Point.create(center:getX(), center:getY(), z),endpointMajor)
     local majorAxis2D = Shape.createLineSegment(center, Point.create(endpointMajor:getX(), endpointMajor:getY()))
     helper.viewer3D:addShape(majorAxis,helper.lineDecoration3D, nil, iconicId)
-    helper.viewer2D:addShape(majorAxis2D,helper.lineDecoration2D, nil, iconicId2D)
+    helper.viewer2D:addShape(majorAxis2D,helper.lineDecoration2D)
     
     -- Plotting minor axis
     x = center:getX() + minor*math.cos(angle+math.pi/2)
@@ -300,10 +320,10 @@ local function orientation(heightMap, intensityMap, plane)
     local minorAxis = Shape3D.createLineSegment(Point.create(center:getX(), center:getY(), z),endpointMinor)
     local minorAxis2D = Shape.createLineSegment(center, Point.create(endpointMinor:getX(), endpointMinor:getY()))
     helper.viewer3D:addShape(minorAxis,helper.lineDecoration3D, nil, iconicId)
-    helper.viewer2D:addShape(minorAxis2D,helper.lineDecoration2D, nil, iconicId2D)
+    helper.viewer2D:addShape(minorAxis2D,helper.lineDecoration2D)
     
     -- Printing feature value
-    helper.featureText(center:getX(), center:getY(), z, "Deg = "..helper.round((math.deg(angle)*10)/10,2), iconicId, iconicId2D)
+    helper.featureText(center:getX(), center:getY(), z, "Deg = "..helper.round((math.deg(angle)*10)/10,2))
   end
   helper.viewer3D:present()
   helper.viewer2D:present()
