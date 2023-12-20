@@ -14,7 +14,7 @@ local DELAY = 2000 -- ms between each type for demonstration purpose
 
 --Start of Function and Event Scope---------------------------------------------
 
--- Looping through the functions
+---Looping through the functions
 local function main()
   -- Load image from resources
   local images = Object.load('resources/image.json')

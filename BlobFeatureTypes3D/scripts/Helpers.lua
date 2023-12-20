@@ -40,20 +40,26 @@ planeDeco:setLineColor(0, 0, 240)
 planeDeco:setFillColor(0, 0, 240, 10)
 planeDeco:setLineWidth(2)
 
--- Help function to print feature values for each blob
-local function featureText(x, y, z, strg, parent3D, parent2D)
+---Help function to print feature values for each blob
+---@param x float
+---@param y float
+---@param z float
+---@param strg string
+local function featureText(x, y, z, strg)
   local textDeco = View.TextDecoration.create()
   textDeco:setColor(0, 0, 240)
   textDeco:setSize(4)
   textDeco:setPosition(x, y, z)
 
-  viewer3D:addText(strg, textDeco, nil, parent3D)
-  viewer2D:addText(strg, textDeco, nil, parent2D)
+  viewer3D:addText(strg, textDeco)
+  viewer2D:addText(strg, textDeco)
   print(strg)
 end
 
--- Help function to find a reference plane
---@getReferencePlane(heightMap:Image, region:Image.PixelRegion):Shape3D
+---Help function to find a reference plane
+---@param heightMap Image
+---@param region Image.PixelRegion
+---@return Shape3D
 local function getReferencePlane(heightMap, region)
   -- Fit a plane inside the region to get a reference height
   local surfaceFitter = Image.SurfaceFitter.create()
@@ -74,8 +80,10 @@ local function getReferencePlane(heightMap, region)
   return plane
 end
 
--- Locate the region where the slope is
---@findSlopeRegion(heightMap:Image, plane:Shape3D):Image.PixelRegion
+---Locate the region where the slope is
+---@param heightMap Image
+---@param plane Shape3D
+---@return Image.PixelRegion
 local function findSlopeRegion(heightMap, plane)
   -- Finding blobs
   local objectRegion = heightMap:thresholdPlane(1, 50, plane)
@@ -103,7 +111,10 @@ local function findSlopeRegion(heightMap, plane)
   return slopeRegion
 end
 
--- Help function to round a value
+---Help function to round a value
+---@param num number
+---@param numDecimalPlaces int
+---@return userdata
 local function round(num, numDecimalPlaces)
   return tonumber(string.format('%.' .. (numDecimalPlaces or 0) .. 'f', num))
 end
